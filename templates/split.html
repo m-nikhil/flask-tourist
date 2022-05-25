@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="min-h-screen bg-gray-100">
+  <div class="py-6">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-12 lg:gap-8">
+      <aside class="lg:col-span-3 ">
+        <div class="sticky top-6 space-y-4">
+          <!-- Your content -->
+
+        {% block first %}
+        {% endblock first %}
+        </div>
+      </aside>
+      <main class="lg:col-span-9">
+        <!-- Your content -->
+
+        {% block second %}
+        {% endblock second %}
+      </main>
+
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock content %}
