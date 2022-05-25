@@ -1,0 +1,2 @@
+# setup database
+python3 
