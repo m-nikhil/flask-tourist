@@ -19,10 +19,6 @@ def get_db_connection():
 def home():
     return "Hello, World!"
 
-@app.route('/welcome')
-def welcome():
-    return render_template('welcome.html')
-
 @app.route('/signin')
 def signin():
     return render_template('signin.html')
