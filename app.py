@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from flask_login import LoginManager,login_user,login_required, logout_user
 from user import User
 from database import get_db_connection
+from pprint import pprint
 
 load_dotenv(override=True)
 app = Flask(__name__)
@@ -33,10 +34,12 @@ def lock_ping():
 @app.route('/attraction')
 def attraction():
     cur = get_db_connection().cursor()
-    cur.execute('SELECT * FROM attraction;')
+    cur.execute('SELECT * FROM day_attraction INNER JOIN attraction USING (attraction_id) where date=\'NOW()\';')
     attractions = cur.fetchall()
+    colnames = [desc[0] for desc in cur.description]
+    attractions_dict = [ dict(zip(colnames,attraction)) for attraction in attractions ]
     cur.close()
-    return render_template('attraction.html', attractions=attractions)
+    return render_template('attraction.html', attractions=attractions_dict)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -45,6 +48,7 @@ def login():
         cur = get_db_connection().cursor()
         cur.execute('SELECT * FROM "user" WHERE email=\'{}\' and password=\'{}\';'.format(request.form['email'], request.form['password']))
         user = cur.fetchone()
+        cur.close()
         if not user:
             error = 'Invalid Credentials. Please try again.'
         else:

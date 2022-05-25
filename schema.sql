@@ -1,5 +1,6 @@
 -- Dropping tables to allow rerun of .sql
 DROP TABLE if exists "user";
+DROP TABLE if exists "day_attraction";
 DROP TABLE if exists attraction;
 
 CREATE TABLE attraction (
@@ -42,4 +43,23 @@ VALUES
     ('Apple',
     'apple@gmail',
     'apple');
+
+CREATE TABLE "day_attraction" (
+	date DATE NOT NULL,
+	attraction_id INT NOT NULL,
+    number_of_tickets_booked INT NOT NULL,
+    CONSTRAINT fk_attraction
+      FOREIGN KEY(attraction_id) 
+	  REFERENCES attraction(attraction_id),
+    PRIMARY KEY(date, attraction_id)
+);
+
+insert into day_attraction (date,attraction_id,number_of_tickets_booked )
+VALUES (NOW(), 1, 25 ),
+       (NOW() + INTERVAL '1 DAY', 1, 30 ),
+       (NOW() + INTERVAL '2 DAY', 1, 40 ),
+       (NOW(), 2, 100 ),
+       (NOW() + INTERVAL '1 DAY', 2, 90 ),
+       (NOW() + INTERVAL '2 DAY', 2, 75 );
+
 

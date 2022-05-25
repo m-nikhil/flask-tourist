@@ -9,7 +9,7 @@
 
 # setup database
 - pipenv shell
-- python3 init_db
+- python3 init_db.py
 
 # install
 - pipenv install <package> (outside of pipenv shell)
