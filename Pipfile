@@ -9,6 +9,7 @@ flask-assets = "*"
 pytailwindcss = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
+flask-login = "*"
 
 [dev-packages]
 
