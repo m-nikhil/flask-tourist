@@ -34,7 +34,7 @@ def lock_ping():
 
 @app.route('/attraction')
 def attraction():
-    city = request.args.get('city')
+    city = request.args.get('city') if request.args.get('city') else ''
     city_clause = 'and city = \'{}\''.format(city) if city else ''
     if 'date' in request.args and not request.args.get('date') == '':
         date = request.args.get('date')
