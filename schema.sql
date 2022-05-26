@@ -78,3 +78,28 @@ VALUES (NOW(), 1, 25 ),
        (NOW() - INTERVAL '1 DAY', 3, 15 );
 
 
+CREATE TABLE booking (
+	booking_id serial PRIMARY KEY,
+	user_id INT NOT NULL,
+	attraction_id INT NOT NULL,
+	date_of_booking DATE,
+    number_of_tickets INT NOT NULL,
+    status VARCHAR (100) NOT NULL,
+    CONSTRAINT fk_booking_attraction
+      FOREIGN KEY(attraction_id)
+	  REFERENCES attraction(attraction_id),
+    CONSTRAINT fk_booking_user
+      FOREIGN KEY(user_id)
+	  REFERENCES "user"(user_id)
+
+);
+
+INSERT INTO booking(user_id, attraction_id, date_of_booking, number_of_tickets, status)
+VALUES
+(2, 1, NOW(), 3, 'Payment Done'),
+(3, 2, NOW() + INTERVAL '1 DAY', 1, 'Payment Done');
+
+
+
+
+
