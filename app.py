@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from flask_login import LoginManager,login_user,login_required, logout_user
 from user import User
 from database import get_db_connection
+import datetime
 from pprint import pprint
 
 load_dotenv(override=True)
@@ -33,13 +34,40 @@ def lock_ping():
 
 @app.route('/attraction')
 def attraction():
-    cur = get_db_connection().cursor()
-    cur.execute('SELECT * FROM day_attraction INNER JOIN attraction USING (attraction_id) where date=\'NOW()\';')
+    city = request.args.get('city')
+    city_clause = 'and city = \'{}\''.format(city) if city else ''
+    if 'date' in request.args and not request.args.get('date') == '':
+        date = request.args.get('date')
+    else:
+        date = datetime.date.today().strftime('%m/%d/%Y')
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM day_attraction INNER JOIN attraction USING (attraction_id) where date=\'{}\' {};'.format(date, city_clause))
     attractions = cur.fetchall()
+
+    # create day_attraction for a particular date if not populated yet
+    if not attractions:
+
+        cur.execute('SELECT * FROM day_attraction where date=\'{}\''.format(date))
+        day_attraction = cur.fetchall()
+
+        if not day_attraction:
+            cur.execute('SELECT attraction_id FROM attraction')
+            attraction_ids = cur.fetchall()
+
+            for id in attraction_ids:
+                cur.execute('INSERT INTO day_attraction (date,attraction_id,number_of_tickets_booked) VALUES (\'{}\',{},{});'.format(date, id[0], 0 ) )
+                conn.commit()
+            cur.execute('SELECT * FROM day_attraction INNER JOIN attraction USING (attraction_id) where date=\'{}\' {};'.format(date, city_clause))
+            attractions = cur.fetchall()
+
     colnames = [desc[0] for desc in cur.description]
     attractions_dict = [ dict(zip(colnames,attraction)) for attraction in attractions ]
     cur.close()
-    return render_template('attraction.html', attractions=attractions_dict)
+    conn.close()
+    pprint(date)
+    return render_template('attraction.html', attractions=attractions_dict, date = date, city = city)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

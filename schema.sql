@@ -9,21 +9,30 @@ CREATE TABLE attraction (
 	description VARCHAR ( 500 ),
 	address VARCHAR ( 500 ),
 	max_tickets_per_day INT NOT NULL,
-    price_per_ticket INT NOT NULL
+    price_per_ticket INT NOT NULL,
+    city VARCHAR ( 50 ) NOT NULL 
 );
 
-INSERT INTO attraction (name,description,address,max_tickets_per_day,price_per_ticket)
+INSERT INTO attraction (name,description,address,max_tickets_per_day,price_per_ticket, city)
 VALUES
     ('Mt. Rainier Day Trip from Seattle',
     'With massive glaciers, powerful waterfalls, and alpine meadows, Mount Rainier National Park is among one of Washington''s most spectacular reserves, but it can be hard to get to, especially in heavy traffic. Visiting the active volcano on a guided tour lets you focus on the views while your guide takes on the hassle of driving. Plus your guide knows some of the best stops to make at some of the most beautiful places in the park.',
     'Mt. Rainier, Seattle, WA, USA',
     50,
-    16),
+    16,
+    'Seattle'),
     ('Seattle Harbor Cruise',
     'See some of Seattle’s most famous landmarks from the water during this guided harbor cruise that has been running since 1949. Hop aboard, and head to either the lower deck or upper sun deck to take in stunning views of Mt. Rainier, the Space Needle, and the Seattle Great Wheel. With an easy-to-find meeting spot and commentary throughout the cruise, you’re sure to have a stress-free time.',
     'Pier 55, 1101 Alaskan Way, Seattle, WA 98101, USA',
     100,
-    38);
+    38,
+    'Seattle'),
+    ('Alcatraz with San Francisco Bay Cruise',
+    'This convenient package gives you access to two essential San Francisco experiences—a visit to Alcatraz Island, and a sightseeing cruise. Instead of waiting in long ticket lines, this time-saving option helps you explore San Francisco more efficiently. Take a ferry to Alcatraz Island where you can go inside the Alcatraz Federal Penitentiary and enjoy an audio guide.',
+    'Blue & Gold Fleet, Pier 41, San Francisco, CA 94133, USA',
+    15,
+    139,
+    'San Francisco');
 
 CREATE TABLE "user" (
 	user_id serial PRIMARY KEY,
@@ -58,8 +67,14 @@ insert into day_attraction (date,attraction_id,number_of_tickets_booked )
 VALUES (NOW(), 1, 25 ),
        (NOW() + INTERVAL '1 DAY', 1, 30 ),
        (NOW() + INTERVAL '2 DAY', 1, 40 ),
+       (NOW() - INTERVAL '1 DAY', 1, 45 ),
        (NOW(), 2, 100 ),
        (NOW() + INTERVAL '1 DAY', 2, 90 ),
-       (NOW() + INTERVAL '2 DAY', 2, 75 );
+       (NOW() + INTERVAL '2 DAY', 2, 75 ),
+       (NOW() - INTERVAL '1 DAY', 2, 50 ),
+       (NOW(), 3, 100 ),
+       (NOW() + INTERVAL '1 DAY', 3, 15 ),
+       (NOW() + INTERVAL '2 DAY', 3, 15 ),
+       (NOW() - INTERVAL '1 DAY', 3, 15 );
 
 
