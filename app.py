@@ -69,6 +69,7 @@ def attraction():
     pprint(date)
     return render_template('attraction.html', attractions=attractions_dict, date = date, city = city)
 
+@app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
