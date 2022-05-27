@@ -178,13 +178,17 @@ def bookAttractionPage(date,attraction_id):
     AttDetail = attractions[0][1];
     AttDescription = attractions[0][2];
 
+    attraction_idString = 'and attraction_id = \'{}\''.format(attraction_id) if attraction_id else ''
+    cur.execute('SELECT * FROM day_attraction where date=\'{}\' {}'.format(date, attraction_idString))
+    day_attraction = cur.fetchall()
+
     cur.execute(
         'SELECT * FROM amenity where attraction_id=\'{}\';'.format(attraction_id))
     amenities = cur.fetchall()
     print(amenities)
     print(amenities[0][2])
     # attractions = cur.fetchall()
-    return render_template('AttractionBooking.html',date = date, attraction_id = attraction_id,AttDetail=AttDetail,AttDescription=AttDescription , amenities = amenities)
+    return render_template('AttractionBooking.html',date = date, attraction_id = attraction_id,AttDetail=AttDetail,AttDescription=AttDescription , amenities = amenities, ticketsAvailable = (int(attractions[0][4]) - int(day_attraction[0][2]) ) )
 
 
 @app.route('/bookingConfirm/<date>/<attraction_id>', methods=['GET', 'POST'])
@@ -221,10 +225,10 @@ def bookingConfirm(date, attraction_id):
     userdetail = cur.fetchall()
     # print(userdetail)
     if(str(cardnumber) != str(paymentdetail[0][1]) and str(expirycard) != str(paymentdetail[0][2]) and str(nameoncard) != str(userdetail[0][1])):
-        return "Invalid Card Detail"
+        return render_template('ConfirmBooking.html', message="Invalid Card Detail")
 
-    if(Maxattraction[0][4] - day_attraction[0][2] <= 0 ):
-        return "Seats not available"
+    if(Maxattraction[0][4] - day_attraction[0][2] < 0 ):
+        return render_template('ConfirmBooking.html', message="Seats Not available")
     else:
         updatequery = 'UPDATE day_attraction SET number_of_tickets_booked = {} where date=\'{}\' {}'.format(int(day_attraction[0][2]) + int(NumberOfTickets),date,attraction_idString)
         cur.execute(updatequery)
@@ -236,7 +240,7 @@ def bookingConfirm(date, attraction_id):
 
     cur.close()
     conn.close()
-    return "Booking confirmed"
+    return render_template('ConfirmBooking.html', message="Booking Confirmed")
 
 if __name__ == '__main__':
     app.run(debug=True)
