@@ -1,9 +1,11 @@
 -- Dropping tables to allow rerun of .sql
-DROP TABLE if exists amenity;
-DROP TABLE if exists "booking";
-DROP TABLE if exists "user";
-DROP TABLE if exists "day_attraction";
-DROP TABLE if exists attraction;
+DROP TABLE if exists amenity cascade;
+DROP TABLE if exists "booking" cascade;
+DROP TABLE if exists "user" cascade;
+DROP TABLE if exists "day_attraction" cascade;
+DROP TABLE if exists attraction cascade;
+DROP TABLE if exists Payment cascade;
+
 
 CREATE TABLE attraction (
 	attraction_id serial PRIMARY KEY,
@@ -58,6 +60,27 @@ VALUES
     'apple@gmail',
     'apple',
     '235658552');
+
+
+CREATE TABLE payment (
+	user_id integer PRIMARY KEY,
+	card_number VARCHAR ( 50 ) UNIQUE NOT NULL,
+    expiration VARCHAR ( 50 )  NOT NULL
+);
+
+INSERT INTO payment (user_id,card_number,expiration)
+VALUES
+    (1,
+    '123456',
+    '01/25'),
+    (2,
+    '654321',
+    '01/25'),
+    (3,
+    '987654',
+    '01/25');
+
+
 
 CREATE TABLE "day_attraction" (
 	date DATE NOT NULL,

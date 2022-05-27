@@ -163,5 +163,80 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+
+
+@app.route('/attraction/<date>/<attraction_id>')
+@login_required
+def bookAttractionPage(date,attraction_id):
+    # pprint(str(date) + "  " + str(attraction_id))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM attraction where attraction_id=\'{}\';'.format(attraction_id))
+    attractions = cur.fetchall()
+    print(attractions)
+    AttDetail = attractions[0][1];
+    AttDescription = attractions[0][2];
+
+    cur.execute(
+        'SELECT * FROM amenity where attraction_id=\'{}\';'.format(attraction_id))
+    amenities = cur.fetchall()
+    print(amenities)
+    print(amenities[0][2])
+    # attractions = cur.fetchall()
+    return render_template('AttractionBooking.html',date = date, attraction_id = attraction_id,AttDetail=AttDetail,AttDescription=AttDescription , amenities = amenities)
+
+
+@app.route('/bookingConfirm/<date>/<attraction_id>', methods=['GET', 'POST'])
+@login_required
+def bookingConfirm(date, attraction_id):
+    # current_user.get_id()
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    if request.method == "POST":
+        NumberOfTickets = request.form['NumberOfTickets']
+        print(request.form)
+        nameoncard = request.form['card-number']
+        cardnumber = request.form['name-on-card']
+        expirycard = request.form['expiration-date']
+
+
+    attraction_idString = 'and attraction_id = \'{}\''.format(attraction_id) if attraction_id else ''
+    cur.execute('SELECT * FROM day_attraction where date=\'{}\' {}'.format(date,attraction_idString))
+    day_attraction = cur.fetchall()
+
+    cur.execute('SELECT * FROM attraction where attraction_id =\'{}\''.format(attraction_id))
+    Maxattraction = cur.fetchall()
+    # print(Maxattraction[0][4])
+    # print("number of tickets booked")
+    # print(day_attraction[0][2])
+
+    cur.execute(
+        'SELECT * FROM payment where user_id=\'{}\';'.format(current_user.get_id()) )
+    paymentdetail = cur.fetchall()
+    # print(paymentdetail)
+    cur.execute(
+        'SELECT * FROM "user" where user_id={};'.format(int(current_user.get_id())))
+    userdetail = cur.fetchall()
+    # print(userdetail)
+    if(str(cardnumber) != str(paymentdetail[0][1]) and str(expirycard) != str(paymentdetail[0][2]) and str(nameoncard) != str(userdetail[0][1])):
+        return "Invalid Card Detail"
+
+    if(Maxattraction[0][4] - day_attraction[0][2] <= 0 ):
+        return "Seats not available"
+    else:
+        updatequery = 'UPDATE day_attraction SET number_of_tickets_booked = {} where date=\'{}\' {}'.format(int(day_attraction[0][2]) + int(NumberOfTickets),date,attraction_idString)
+        cur.execute(updatequery)
+        status = 'Payment Done'
+        BookingSQLInsert = 'INSERT INTO booking(user_id, attraction_id, date_of_booking, number_of_tickets, status) VALUES (\'{}\',{},\'{}\',{},\'{}\');'.format(
+            current_user.get_id(), attraction_id, date, NumberOfTickets, status)
+        cur.execute(BookingSQLInsert)
+        conn.commit()
+
+    cur.close()
+    conn.close()
+    return "Booking confirmed"
+
 if __name__ == '__main__':
     app.run(debug=True)

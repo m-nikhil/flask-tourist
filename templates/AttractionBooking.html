@@ -1,0 +1,108 @@
+
+
+
+{% extends 'split.html' %}
+
+{% block first %}
+
+<h1 class="text-2xl font-extrabold text-center tracking-tight text-gray-500 sm:text-4xl py-5">Confirm Booking</h1>
+
+<form action="/bookingConfirm/{{date}}/{{attraction_id}}" method="POST"  class="space-y-8 divide-y divide-gray-200">
+
+       <div>
+         <label for="NumberOfTickets" class="block text-sm font-medium text-gray-700">Number of Tickets</label>
+              <div class="mt-1">
+<!--     <input type="number" id="NumberOfTickets" name="Number Of Tickets" min="1" max="10">-->
+                   <input type="number" value="{{NumberOfTickets}}" name="NumberOfTickets" id="NumberOfTickets"  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Number"  min="1" >
+                </div>
+            </div>
+
+
+
+    <!-- Payment -->
+        <div class="mt-10 border-t border-gray-200 pt-10">
+          <h2 class="text-lg font-medium text-gray-900">Payment</h2>
+
+          <fieldset class="mt-4">
+            <legend class="sr-only">Payment type</legend>
+            <div class="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
+              <div class="flex items-center">
+                <input id="credit-card" name="payment-type" type="radio" checked class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                <label for="credit-card" class="ml-3 block text-sm font-medium text-gray-700"> Credit card </label>
+              </div>
+
+<!--              <div class="flex items-center">-->
+<!--                <input id="paypal" name="payment-type" type="radio" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">-->
+<!--                <label for="paypal" class="ml-3 block text-sm font-medium text-gray-700"> PayPal </label>-->
+<!--              </div>-->
+
+<!--              <div class="flex items-center">-->
+<!--                <input id="etransfer" name="payment-type" type="radio" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">-->
+<!--                <label for="etransfer" class="ml-3 block text-sm font-medium text-gray-700"> eTransfer </label>-->
+<!--              </div>-->
+<!--            </div>-->
+          </fieldset>
+
+          <div class="mt-6 grid grid-cols-4 gap-y-6 gap-x-4">
+            <div class="col-span-4">
+              <label for="card-number" class="block text-sm font-medium text-gray-700">Card number</label>
+              <div class="mt-1">
+                <input type="text" id="card-number" value="{{card_number}}" name="card-number" autocomplete="cc-number" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              </div>
+            </div>
+
+            <div class="col-span-4">
+              <label for="name-on-card" class="block text-sm font-medium text-gray-700">Name on card</label>
+              <div class="mt-1">
+                <input type="text" id="name-on-card" value="{{nameonCard}}" name="name-on-card" autocomplete="cc-name" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              </div>
+            </div>
+
+            <div class="col-span-3">
+              <label for="expiration-date" class="block text-sm font-medium text-gray-700">Expiration date (MM/YY)</label>
+              <div class="mt-1">
+                <input type="text" name="expiration-date"  value="{{expiration}}" id="expiration-date" autocomplete="cc-exp" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              </div>
+            </div>
+
+            <div>
+              <label for="cvc" class="block text-sm font-medium text-gray-700">CVC</label>
+              <div class="mt-1">
+                <input type="text" name="cvc" id="cvc" autocomplete="csc" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              </div>
+            </div>
+          </div>
+<!--        </div>-->
+      </div>
+    <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
+            <button type="submit" class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500">Confirm Booking</button>
+          </div>
+</form>
+
+{% endblock first %}
+
+{% block second %}
+
+
+
+      <h4 class="text-3xl font-extrabold  tracking-tight text-gray-500 sm:text-4xl py-5">Atraction Details</h4>
+        <h1 class="text-2xl   tracking-tight font-medium text-gray-900 "> {{AttDetail}}</h1>
+
+        <h1  tracking-tight font-medium text-gray-900 s>{{AttDescription}}</h1>
+       <h1  tracking-tight font-medium text-gray-900 s>{{AttDescription}}</h1>
+        <section aria-labelledby="cart-heading">
+           <br></br>
+          <h1  tracking-tight font-medium text-gray-900 s>Amenities</h1>
+          <ul role="list" class="border-t border-b border-gray-200 divide-y divide-gray-200">
+            {% for Amenity in amenities %}
+            <li class="flex py-6">
+              <p class="text-sm font-medium text-gray-900 truncate">{{Amenity[2]}}</p>
+            </li>
+            {% endfor %}
+          </ul>
+        </section>
+
+
+
+
+{% endblock second %}
