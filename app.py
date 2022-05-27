@@ -73,21 +73,21 @@ def attraction():
 @login_required
 def viewBookings():
     pprint(str(current_user.get_id()) + current_user.name)
-    return render_template('viewBooking.html')
-
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute(''' select bk.booking_id, usr.name customer_name, usr.email, att.name attraction_spot, att.description, att.address, att.price_per_ticket, bk.number_of_tickets,
+    sql = '''select bk.booking_id, usr.name customer_name, usr.email, att.name attraction_spot, att.description, att.address, att.price_per_ticket, bk.number_of_tickets,
                 bk.date_of_booking, bk.status from booking bk
-                inner join user usr
+                inner join "user" usr
                 on bk.user_id = usr.user_id
                 inner join attraction att
-                on bk.attraction_id = att.attraction_id
-                where bk.user_id = 2 ''')
+                on bk.attraction_id = att.attraction_id 
+                where bk.user_id = \'{}\' '''.format(current_user.get_id())
+    pprint(sql)
+    cur.execute(sql)
     bookings = cur.fetchall()
 
     colnames = [desc[0] for desc in cur.description]
-    bookings_dict = [ dict(zip(colnames,bookings)) for booking in bookings ]
+    bookings_dict = [ dict(zip(colnames,booking)) for booking in bookings ]
     cur.close()
     conn.close()
     return render_template('viewBooking.html', bookings=bookings_dict)
