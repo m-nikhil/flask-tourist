@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_assets import Bundle, Environment
 from dotenv import load_dotenv
 from flask_login import LoginManager,login_user,login_required, logout_user, current_user
@@ -75,7 +75,7 @@ def viewBookings():
     pprint(str(current_user.get_id()) + current_user.name)
     conn = get_db_connection()
     cur = conn.cursor()
-    sql = '''select bk.booking_id, usr.name customer_name, usr.email, att.name attraction_spot, att.description, att.address, att.price_per_ticket, bk.number_of_tickets,
+    sql = '''select bk.booking_id, bk.attraction_id, att.name attraction_spot, att.description, att.address, att.price_per_ticket, bk.number_of_tickets,
                 bk.date_of_booking, bk.status from booking bk
                 inner join "user" usr
                 on bk.user_id = usr.user_id
@@ -88,9 +88,57 @@ def viewBookings():
 
     colnames = [desc[0] for desc in cur.description]
     bookings_dict = [ dict(zip(colnames,booking)) for booking in bookings ]
+    pprint(bookings)
+
+    # Get all the past bookings here
+    sql = '''select bk.booking_id, bk.attraction_id, att.name attraction_spot, att.description, att.address, att.price_per_ticket, bk.number_of_tickets,
+                   bk.date_of_booking, bk.status from booking bk
+                   inner join "user" usr
+                   on bk.user_id = usr.user_id
+                   inner join attraction att
+                   on bk.attraction_id = att.attraction_id 
+                   where bk.date_of_booking < current_date and bk.user_id = \'{}\' '''.format(current_user.get_id())
+    pprint(sql)
+    cur.execute(sql)
+    past_bookings = cur.fetchall()
+
+    colnames = [desc[0] for desc in cur.description]
+    past_bookings_dict = [dict(zip(colnames, booking)) for booking in past_bookings]
+
+    # Get user's info here
+    sql = '''select name, email, contact from "user" where user_id = \'{}\' '''.format(current_user.get_id())
+    pprint(sql)
+    cur.execute(sql)
+    user_details = cur.fetchall()
+
+    colnames = [desc[0] for desc in cur.description]
+    user_details_dict = [dict(zip(colnames, user)) for user in user_details]
+
     cur.close()
     conn.close()
-    return render_template('viewBooking.html', bookings=bookings_dict)
+    return render_template('viewBooking.html', bookings=bookings_dict, past_bookings=past_bookings_dict, today_date=datetime.date.today(), user_details=user_details_dict)
+
+@app.route('/cancelBooking/<booking_id>/<attraction_id>/<number_of_tickets>/<date>')
+def cancelBooking(booking_id=None, attraction_id=None, number_of_tickets=None, date=None):
+
+    pprint(booking_id)
+    pprint(attraction_id)
+    pprint(number_of_tickets)
+    pprint(date)
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('delete from booking where booking_id = \'{}\';'.format(booking_id))
+    sql_update = ''' update day_attraction set number_of_tickets_booked = number_of_tickets_booked - {} where
+                    attraction_id = \'{}\' and date =  \'{}\' '''.format(number_of_tickets, attraction_id, date)
+    cur.execute(sql_update)
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    flash('Booking successfully cancelled')
+    return redirect(url_for('viewBookings'))
+
 
 @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])

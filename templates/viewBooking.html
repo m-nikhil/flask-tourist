@@ -1,9 +1,58 @@
-{% extends 'base.html' %}
-<!-- This example requires Tailwind CSS v2.0+ -->
+{% extends 'split.html' %}
 
-{% block content %}
+{% block first %}
 <!-- This example requires Tailwind CSS v2.0+ -->
-<!-- This example requires Tailwind CSS v2.0+ -->
+<div class="bg-white">
+  <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-lg mx-auto md:max-w-none md:grid md:grid-cols-2 md:gap-8">
+      <div>
+        <h2 class="text-2xl font-extrabold text-gray-900 sm:text-3xl">Profile:</h2>
+        <div class="mt-8">
+            {% for user in user_details %}
+            <div class="flex">
+
+            <div class="ml-3 text-base text-black-500">
+              <p><b>{{user['name']}}</b></p>
+            </div>
+          </div>
+
+          <div class="mt-6 flex">
+            <div class="flex-shrink-0">
+              <!-- Heroicon name: outline/phone -->
+              <svg class="h-6 w-6 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+            </div>
+
+            <div class="ml-3 text-base text-black-500">
+              <p>{{user['contact']}}</p>
+            </div>
+          </div>
+
+          <div class="mt-6 flex">
+            <div class="flex-shrink-0">
+              <!-- Heroicon name: outline/mail -->
+              <svg class="h-6 w-6 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div class="ml-3 text-base text-black-500">
+                <p>{{user['email']}}</p>
+            </div>
+          </div>
+
+           {% endfor %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock first %}
+
+{% block second %}
 <div class="px-4 sm:px-6 lg:px-8">
   <div class="sm:flex sm:items-center">
     <div class="sm:flex-auto">
@@ -11,57 +60,157 @@
       <p class="mt-2 text-sm text-gray-700">View all your upcoming attractions here:</p>
     </div>
   </div>
-  <div class="mt-8 flex flex-col">
-    <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-      <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-          <table class="min-w-full divide-y divide-gray-300">
-            <thead class="bg-gray-50">
-              <tr>
-                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Attraction Spot</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" style="word-break:break-all;" >Description</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date booked for</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Number of Tickets</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 bg-white">
-            {% for booking in bookings %}
-              <tr>
-                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                    <div class="flex items-center">
-                      <div class="h-10 w-10 flex-shrink-0">
-                        <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                      </div>
-                      <div class="ml-4">
-                        <div class="font-medium text-gray-900">{{booking['attraction_spot']}}</div>
-                        <div class="text-gray-500">{{booking['booking_id']}}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <div class="text-gray-900">{{booking['description']}}</div>
-                  </td>
 
-
-
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <span class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">{{booking['date_of_booking']}}</span>
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{booking['number_of_tickets']}}</td>
-                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <span class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">{{booking['status']}}</span>
-                  </td>
-
+  {% if bookings is defined and bookings|length > 0 %}
+    <div class="mt-8 flex flex-col">
+      <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300" >
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Attraction Spot</th>
+                  <!--<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" > Description</th> -->
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date booked for</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Number of Tickets</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+                  <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                    <span class="sr-only">Edit</span>
+                  </th>
                 </tr>
-              {% endfor %}
-              <!-- More people... -->
-            </tbody>
-          </table>
+              </thead>
+              <tbody class="divide-y divide-gray-200 bg-white">
+              {% for booking in bookings %}
+                <tr>
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                      <div class="flex items-center">
+                        <div class="h-10 w-10 flex-shrink-0">
+                          <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                        </div>
+                        <div class="ml-4">
+                          <div class="font-medium text-gray-900">{{booking['attraction_spot']}}</div>
+                          <div class="text-gray-500">{{booking['booking_id']}}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <!-- <td  class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <div class="text-gray-900" style="max-width:200px;text-overflow: ellipsis; overflow: hidden;">  {{booking['description']}} </div>
+                    </td> -->
+
+
+
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <span class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">{{booking['date_of_booking']}}</span>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{booking['number_of_tickets']}}</td>
+                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <span class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">{{booking['status']}}</span>
+                    </td>
+
+                    {% if booking['status'] == 'Payment Done' and booking['date_of_booking'] > today_date %}
+                      <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                        <a href="/cancelBooking/{{booking['booking_id']}}/{{booking['attraction_id']}}/{{booking['number_of_tickets']}}/{{booking['date_of_booking']}}" class="text-indigo-600 hover:text-indigo-900"><input type="button" value="Cancel Booking" /></a>
+                      </td>
+                    {% endif %}
+
+                  </tr>
+                {% endfor %}
+
+                 {% for message in get_flashed_messages() %}
+                    <div class="alert-error">Error: {{ message }}</div>
+                  {% endfor %}
+
+                <!-- More people... -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+{% else %}
 
-{% endblock content %}
+  <div class="rounded-md bg-blue-50 p-4">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <!-- Heroicon name: solid/information-circle -->
+        <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div class="ml-3 flex-1 md:flex md:justify-between">
+        <p class="text-sm text-blue-700">No upcoming attractions booked yet!</p>
+      </div>
+    </div>
+  </div>
+
+{%endif %}
+
+<d style="padding-left:4em;" > </d>
+
+{% if past_bookings is defined and past_bookings|length > 0 %}
+
+<div class="px-4 sm:px-6 lg:px-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-xl font-semibold text-gray-900">Past Booked Attractions</h1>
+      <p class="mt-2 text-sm text-gray-700">View all your past visited attractions here:</p>
+    </div>
+  </div>
+
+    <div class="mt-8 flex flex-col">
+      <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300" >
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Attraction Spot</th>
+                  <!-- <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" > Description</th> -->
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date booked for</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Number of Tickets</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 bg-white">
+              {% for booking in past_bookings %}
+                <tr>
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                      <div class="flex items-center">
+                        <div class="h-10 w-10 flex-shrink-0">
+                          <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                        </div>
+                        <div class="ml-4">
+                          <div class="font-medium text-gray-900">{{booking['attraction_spot']}}</div>
+                          <div class="text-gray-500">{{booking['booking_id']}}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <!-- <td  class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <div class="text-gray-900" style="max-width:200px;text-overflow: ellipsis; overflow: hidden;">  {{booking['description']}} </div>
+                    </td> -->
+
+
+
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <span class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">{{booking['date_of_booking']}}</span>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{booking['number_of_tickets']}}</td>
+                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <span class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">{{booking['status']}}</span>
+                    </td>
+
+                  </tr>
+                {% endfor %}
+                <!-- More people... -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{%endif %}
+
+{% endblock second %}

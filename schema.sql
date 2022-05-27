@@ -1,6 +1,6 @@
 -- Dropping tables to allow rerun of .sql
 DROP TABLE if exists amenity;
-DROP TABLE if exists booking;
+DROP TABLE if exists "booking";
 DROP TABLE if exists "user";
 DROP TABLE if exists "day_attraction";
 DROP TABLE if exists attraction;
@@ -40,20 +40,24 @@ CREATE TABLE "user" (
 	user_id serial PRIMARY KEY,
 	name VARCHAR ( 50 ) NOT NULL,
     email VARCHAR ( 50 ) UNIQUE NOT NULL,
+    contact INT  NOT NULL,
     password VARCHAR ( 50 ) NOT NULL
 );
 
-INSERT INTO "user" (name,email,password)
+INSERT INTO "user" (name,email,password,contact)
 VALUES
     ('Admin',
     'admin@gmail',
-    'admin'),
+    'admin',
+    '235265852'),
     ('Nikhil',
     'nik@gmail',
-    'nikhil'),
+    'nikhil',
+    '235265858'),
     ('Apple',
     'apple@gmail',
-    'apple');
+    'apple',
+    '235658552');
 
 CREATE TABLE "day_attraction" (
 	date DATE NOT NULL,
