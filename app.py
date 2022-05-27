@@ -39,7 +39,7 @@ def attraction():
     if 'date' in request.args and not request.args.get('date') == '':
         date = request.args.get('date')
     else:
-        date = datetime.date.today().strftime('%m/%d/%Y')
+        date = datetime.date.today().strftime('%m-%d-%Y')
 
     conn = get_db_connection()
     cur = conn.cursor()

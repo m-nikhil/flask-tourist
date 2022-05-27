@@ -29,7 +29,7 @@
             {% for attraction in attractions %}
             <li class="flex py-6">
 
-                <a href="/attraction/{{attraction['attraction_id']}}" class="block hover:bg-gray-50">
+                <a href="/attraction/{{date}}/{{attraction['attraction_id']}}" class="block hover:bg-gray-50">
                     <div class="px-4 py-4 sm:px-6">
                       <div class="flex items-center justify-between">
                         <p class="text-sm font-medium text-indigo-600 truncate">{{attraction['name']}}</p>
