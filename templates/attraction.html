@@ -29,7 +29,7 @@
             {% for attraction in attractions %}
             <li class="flex py-6">
 
-                <a href="/attraction/{{date}}/{{attraction['attraction_id']}}" class="block hover:bg-gray-50">
+                <div class="block hover:bg-gray-50">
                     <div class="px-4 py-4 sm:px-6">
                       <div class="flex items-center justify-between">
                         <p class="text-sm font-medium text-indigo-600 truncate">{{attraction['name']}}</p>
@@ -47,11 +47,7 @@
                             <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                               <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                             </svg>
-                            {% if attraction['max_tickets_per_day'] - attraction['number_of_tickets_booked'] == 0 %}
-                              Available tickets:  <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Full</p>
-                            {% else %}
-                              Available tickets: {{attraction['max_tickets_per_day'] - attraction['number_of_tickets_booked']}}
-                            {% endif %}
+                            Available tickets: {{attraction['max_tickets_per_day'] - attraction['number_of_tickets_booked']}}
                           </p>
                           <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
                             <!-- Heroicon name: solid/location-marker -->
@@ -61,9 +57,20 @@
                             {{attraction['address']}}
                           </p>
                         </div>
+                        {% if attraction['max_tickets_per_day'] - attraction['number_of_tickets_booked'] != 0 %}
+                        <div class="mt-2 sm:flex sm:justify-end">
+                          <a href="/attraction/{{date}}/{{attraction['attraction_id']}}" class=" inline-flex justify-center py-1 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Book</a>
+                        </div>
+                        {% else %}
+                        <div class="mt-1 sm:flex sm:justify-end">
+                          <a class=" inline-flex justify-center py-1 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Not Available</a>
+                        </div>
+                        {% endif %}
+
+                      
                       </div>
                     </div>
-                  </a>
+                  </div>
             </li>
             {% endfor %}
           </ul>

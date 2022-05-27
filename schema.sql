@@ -1,4 +1,5 @@
 -- Dropping tables to allow rerun of .sql
+DROP TABLE if exists booking;
 DROP TABLE if exists "user";
 DROP TABLE if exists "day_attraction";
 DROP TABLE if exists attraction;
@@ -72,7 +73,7 @@ VALUES (NOW(), 1, 25 ),
        (NOW() + INTERVAL '1 DAY', 2, 90 ),
        (NOW() + INTERVAL '2 DAY', 2, 75 ),
        (NOW() - INTERVAL '1 DAY', 2, 50 ),
-       (NOW(), 3, 100 ),
+       (NOW(), 3, 15 ),
        (NOW() + INTERVAL '1 DAY', 3, 15 ),
        (NOW() + INTERVAL '2 DAY', 3, 15 ),
        (NOW() - INTERVAL '1 DAY', 3, 15 );
