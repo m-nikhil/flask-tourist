@@ -1,4 +1,5 @@
 -- Dropping tables to allow rerun of .sql
+DROP TABLE if exists amenity;
 DROP TABLE if exists booking;
 DROP TABLE if exists "user";
 DROP TABLE if exists "day_attraction";
@@ -77,6 +78,21 @@ VALUES (NOW(), 1, 25 ),
        (NOW() + INTERVAL '1 DAY', 3, 15 ),
        (NOW() + INTERVAL '2 DAY', 3, 15 ),
        (NOW() - INTERVAL '1 DAY', 3, 15 );
+
+CREATE TABLE amenity (
+    amenity_id serial PRIMARY KEY,
+	attraction_id INT NOT NULL,
+    amenity_name VARCHAR (100) NOT NULL
+);
+
+insert into amenity (attraction_id,amenity_name )
+VALUES (1, 'Hotel pickup offered'),
+       (1, 'Free parking'),
+       (1, 'Food & Drinks'),
+       (2, 'Hotel pickup offered'),
+       (2, 'Taking Covid-19 safety measures'),
+       (3, 'Taking Covid-19 safety measures'),
+       (3, 'Souvenir photos');
 
 
 CREATE TABLE booking (
