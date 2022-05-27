@@ -41,6 +41,10 @@
               <div>
                 <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sign in</button>
               </div>
+
+              {% if error %}
+              <p class="text-sm"><strong>Error:</strong> {{ error }}
+              {% endif %}
   
             </form>
 
@@ -49,9 +53,7 @@
         </div>
       </div>
 
-      {% if error %}
-      <p class="text-sm"><strong>Error:</strong> {{ error }}
-      {% endif %}
+
 
       
     </div>
@@ -59,7 +61,7 @@
     <div>
     </div>
     <div class="hidden lg:block relative w-0 flex-1">
-      <img class="absolute inset-0 h-full w-full object-cover" src="https://images.unsplash.com/photo-1505904267569-f02eaeb45a4c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80" alt="">
+      <img class="absolute inset-0 h-full w-full object-cover" src="https://media.istockphoto.com/photos/collage-of-printed-travel-images-picture-id527115069" alt="">
     </div>
   </div>
 {% endblock content %}
