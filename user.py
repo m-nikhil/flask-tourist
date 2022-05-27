@@ -18,3 +18,6 @@ class User(UserMixin):
         if not user:
             return None
         return User(user[0],user[1],user[2],user[3])
+
+    def get_id(self):
+        return self.id

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_assets import Bundle, Environment
 from dotenv import load_dotenv
-from flask_login import LoginManager,login_user,login_required, logout_user
+from flask_login import LoginManager,login_user,login_required, logout_user, current_user
 from user import User
 from database import get_db_connection
 import datetime
@@ -68,6 +68,29 @@ def attraction():
     conn.close()
     pprint(date)
     return render_template('attraction.html', attractions=attractions_dict, date = date, city = city)
+
+@app.route('/viewBookings')
+@login_required
+def viewBookings():
+    pprint(str(current_user.get_id()) + current_user.name)
+    return render_template('viewBooking.html')
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(''' select bk.booking_id, usr.name customer_name, usr.email, att.name attraction_spot, att.description, att.address, att.price_per_ticket, bk.number_of_tickets,
+                bk.date_of_booking, bk.status from booking bk
+                inner join user usr
+                on bk.user_id = usr.user_id
+                inner join attraction att
+                on bk.attraction_id = att.attraction_id
+                where bk.user_id = 2 ''')
+    bookings = cur.fetchall()
+
+    colnames = [desc[0] for desc in cur.description]
+    bookings_dict = [ dict(zip(colnames,bookings)) for booking in bookings ]
+    cur.close()
+    conn.close()
+    return render_template('viewBooking.html', bookings=bookings_dict)
 
 @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])

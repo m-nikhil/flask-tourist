@@ -10,6 +10,7 @@ pytailwindcss = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
 flask-login = "*"
+colorama = "*"
 
 [dev-packages]
 
