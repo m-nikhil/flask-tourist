@@ -78,13 +78,13 @@ def attraction():
     attractions_dict = [ dict(zip(colnames,attraction)) for attraction in attractions ]
     cur.close()
     conn.close()
-    pprint(date)
+    #pprint(date)
     return render_template('attraction.html', attractions=attractions_dict, date = date, city = city, today=datetime.date.today())
 
 @app.route('/viewBookings')
 @login_required
 def viewBookings():
-    pprint(str(current_user.get_id()) + current_user.name)
+    #pprint(str(current_user.get_id()) + current_user.name)
     conn = get_db_connection()
     cur = conn.cursor()
     # SQL query to retrieve bookings
@@ -95,13 +95,13 @@ def viewBookings():
                 inner join attraction att
                 on bk.attraction_id = att.attraction_id 
                 where bk.date_of_booking >= current_date and bk.user_id = \'{}\' '''.format(current_user.get_id())
-    pprint(sql)
+    #pprint(sql)
     cur.execute(sql)
     bookings = cur.fetchall()
 
     colnames = [desc[0] for desc in cur.description]
     bookings_dict = [ dict(zip(colnames,booking)) for booking in bookings ]
-    pprint(bookings)
+    #pprint(bookings)
 
     # Get all the past bookings here
     sql = '''select bk.booking_id, bk.attraction_id, att.name attraction_spot, att.description, att.address, att.price_per_ticket, bk.number_of_tickets,
@@ -111,7 +111,7 @@ def viewBookings():
                    inner join attraction att
                    on bk.attraction_id = att.attraction_id 
                    where bk.date_of_booking < current_date and bk.user_id = \'{}\' '''.format(current_user.get_id())
-    pprint(sql)
+    #pprint(sql)
     cur.execute(sql)
     past_bookings = cur.fetchall()
 
@@ -120,7 +120,7 @@ def viewBookings():
 
     # Get user's info here
     sql = '''select name, email, contact from "user" where user_id = \'{}\' '''.format(current_user.get_id())
-    pprint(sql)
+    #pprint(sql)
     cur.execute(sql)
     user_details = cur.fetchall()
 
@@ -134,10 +134,10 @@ def viewBookings():
 @app.route('/cancelBooking/<booking_id>/<attraction_id>/<number_of_tickets>/<date>')
 def cancelBooking(booking_id=None, attraction_id=None, number_of_tickets=None, date=None):
 
-    pprint(booking_id)
-    pprint(attraction_id)
-    pprint(number_of_tickets)
-    pprint(date)
+    # pprint(booking_id)
+    # pprint(attraction_id)
+    # pprint(number_of_tickets)
+    # pprint(date)
 
     conn = get_db_connection()
     cur = conn.cursor()
@@ -189,7 +189,7 @@ def bookAttractionPage(date,attraction_id):
     # SQL query to retrieve attractions
     cur.execute('SELECT * FROM attraction where attraction_id=\'{}\';'.format(attraction_id))
     attractions = cur.fetchall()
-    print(attractions)
+    #print(attractions)
     AttDetail = attractions[0][1];
     AttDescription = attractions[0][2];
 
@@ -204,7 +204,7 @@ def bookAttractionPage(date,attraction_id):
 
     # attractions = cur.fetchall()
     ticketsAvailable = (int(attractions[0][4]) - int(day_attraction[0][2]) )
-    print(ticketsAvailable)
+    #print(ticketsAvailable)
     return render_template('AttractionBooking.html',date = date, attraction_id = attraction_id,AttDetail=AttDetail,AttDescription=AttDescription , amenities = amenities,ticketsAvailable = ticketsAvailable)
 
 
@@ -217,9 +217,8 @@ def bookingConfirm(date, attraction_id):
 
     if request.method == "POST":
         NumberOfTickets = request.form['NumberOfTickets']
-        print(request.form)
-        nameoncard = request.form['card-number']
-        cardnumber = request.form['name-on-card']
+        cardnumber = request.form['card-number']
+        nameoncard = request.form['name-on-card']
         expirycard = request.form['expiration-date']
 
 
@@ -240,6 +239,7 @@ def bookingConfirm(date, attraction_id):
     #validating payment detail
     if(str(cardnumber) != str(paymentdetail[0][1]) or str(expirycard) != str(paymentdetail[0][2]) or str(nameoncard) != str(userdetail[0][1])):
         flash('Invalid Card Detail')
+        print(cardnumber + " " + expirycard + " " + nameoncard)
         return redirect(url_for('bookAttractionPage', date=date, attraction_id=attraction_id))
 
     if(Maxattraction[0][4] - (day_attraction[0][2] + int(NumberOfTickets) ) < 0 ):
