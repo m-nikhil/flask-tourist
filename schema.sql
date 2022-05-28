@@ -94,7 +94,8 @@ CREATE TABLE "day_attraction" (
     CONSTRAINT fk_attraction
       FOREIGN KEY(attraction_id) 
 	  REFERENCES attraction(attraction_id),
-    PRIMARY KEY(date, attraction_id)
+    PRIMARY KEY(date, attraction_id),
+    CONSTRAINT positive_number_OF_tickets_booked CHECK (number_of_tickets_booked > 0)
 );
 
 insert into day_attraction (date,attraction_id,number_of_tickets_booked )
