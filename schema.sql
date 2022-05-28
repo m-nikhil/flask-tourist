@@ -14,8 +14,8 @@ CREATE TABLE attraction (
 	max_tickets_per_day INT NOT NULL,
     price_per_ticket INT NOT NULL,
     city VARCHAR ( 50 ) NOT NULL,
-    CONSTRAINT positive_price CHECK (price_per_ticket > 0),
-    CONSTRAINT positive_max_tickets_per_day  CHECK (max_tickets_per_day  > 0)
+    CONSTRAINT positive_price CHECK (price_per_ticket >= 0),
+    CONSTRAINT positive_max_tickets_per_day  CHECK (max_tickets_per_day  >= 0)
 );
 
 INSERT INTO attraction (name,description,address,max_tickets_per_day,price_per_ticket, city)
@@ -144,7 +144,7 @@ CREATE TABLE "day_attraction" (
       FOREIGN KEY(attraction_id) 
 	  REFERENCES attraction(attraction_id),
     PRIMARY KEY(date, attraction_id),
-    CONSTRAINT positive_number_OF_tickets_booked CHECK (number_of_tickets_booked > 0)
+    CONSTRAINT positive_number_OF_tickets_booked CHECK (number_of_tickets_booked >= 0)
 );
 
 insert into day_attraction (date,attraction_id,number_of_tickets_booked )
@@ -213,7 +213,7 @@ CREATE TABLE booking (
     CONSTRAINT fk_booking_user
       FOREIGN KEY(user_id)
 	  REFERENCES "user"(user_id),
-	CONSTRAINT positive_number_OF_tickets CHECK (number_of_tickets > 0)
+	CONSTRAINT positive_number_OF_tickets CHECK (number_of_tickets >= 0)
 
 );
 
