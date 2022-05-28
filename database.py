@@ -1,6 +1,8 @@
 import os
 import psycopg2
-
+'''
+PostgresSQL database connection
+'''
 def get_db_connection():
     conn = psycopg2.connect(host= os.getenv('DB_HOST'),
                             database=os.getenv('DB_DATABASE'),

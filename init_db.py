@@ -1,7 +1,10 @@
 import os
 import psycopg2
 from dotenv import load_dotenv
-
+'''
+Database Initialization
+Run:  Python3 init_db.py
+'''
 load_dotenv(override=True)
 conn = psycopg2.connect(host= os.getenv('DB_HOST'),
                         database=os.getenv('DB_DATABASE'),
