@@ -14,7 +14,9 @@ CREATE TABLE attraction (
 	address VARCHAR ( 500 ),
 	max_tickets_per_day INT NOT NULL,
     price_per_ticket INT NOT NULL,
-    city VARCHAR ( 50 ) NOT NULL 
+    city VARCHAR ( 50 ) NOT NULL,
+    CONSTRAINT positive_price CHECK (price_per_ticket > 0),
+    CONSTRAINT positive_max_tickets_per_day  CHECK (max_tickets_per_day  > 0)
 );
 
 INSERT INTO attraction (name,description,address,max_tickets_per_day,price_per_ticket, city)
@@ -65,7 +67,10 @@ VALUES
 CREATE TABLE payment (
 	user_id integer PRIMARY KEY,
 	card_number VARCHAR ( 50 ) UNIQUE NOT NULL,
-    expiration VARCHAR ( 50 )  NOT NULL
+    expiration VARCHAR ( 50 )  NOT NULL,
+    CONSTRAINT fk_payment_user
+      FOREIGN KEY(user_id)
+	  REFERENCES "user"(user_id)
 );
 
 INSERT INTO payment (user_id,card_number,expiration)
@@ -109,7 +114,10 @@ VALUES (NOW(), 1, 25 ),
 CREATE TABLE amenity (
     amenity_id serial PRIMARY KEY,
 	attraction_id INT NOT NULL,
-    amenity_name VARCHAR (100) NOT NULL
+    amenity_name VARCHAR (100) NOT NULL,
+    CONSTRAINT fk_attraction
+      FOREIGN KEY(attraction_id)
+	  REFERENCES attraction(attraction_id)
 );
 
 insert into amenity (attraction_id,amenity_name )
@@ -134,7 +142,8 @@ CREATE TABLE booking (
 	  REFERENCES attraction(attraction_id),
     CONSTRAINT fk_booking_user
       FOREIGN KEY(user_id)
-	  REFERENCES "user"(user_id)
+	  REFERENCES "user"(user_id),
+	CONSTRAINT positive_number_OF_tickets CHECK (number_of_tickets > 0)
 
 );
 
