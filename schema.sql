@@ -5,19 +5,21 @@ DROP TABLE if exists "user" cascade;
 DROP TABLE if exists "day_attraction" cascade;
 DROP TABLE if exists attraction cascade;
 DROP TABLE if exists Payment cascade;
----Created attraction, user, amenity table , day attraciton , booking  and their insertions
+
+---Created attraction, user, amenity table , day attraction , booking  and their insertions
 CREATE TABLE attraction (
 	attraction_id serial PRIMARY KEY,
-	name VARCHAR ( 50 ) UNIQUE NOT NULL,
-	description VARCHAR ( 500 ),
-	address VARCHAR ( 500 ),
+	name VARCHAR ( 100 ) UNIQUE NOT NULL,
+	description VARCHAR ( 1000 ),
+	address VARCHAR ( 1000 ),
 	max_tickets_per_day INT NOT NULL,
     price_per_ticket INT NOT NULL,
-    city VARCHAR ( 50 ) NOT NULL,
+    city VARCHAR ( 100 ) NOT NULL,
     CONSTRAINT positive_price CHECK (price_per_ticket >= 0),
     CONSTRAINT positive_max_tickets_per_day  CHECK (max_tickets_per_day  >= 0)
 );
 
+-- Insert base (raw) entries into attraction table
 INSERT INTO attraction (name,description,address,max_tickets_per_day,price_per_ticket, city)
 VALUES
     ('Mt. Rainier Day Trip from Seattle',
@@ -67,16 +69,30 @@ VALUES
     '12001 Main St, Bellevue, WA 98005-3522',
     15,
     25,
-    'Bellevue');
+    'Bellevue'),
+    ('2 Hour Guided Boat Tour in Gig Harbor and Narrows Bridges',
+    'See a new side of Gig Harbor—and soak up the wild scenery of Puget Sound—on this boat tour. Meet your Coast Guard-certified captain, hop aboard the ex-navy boat, and set sail. ',
+    '8829 N Harborview Dr, Gig Harbor, WA 98332, USA',
+    25,
+    150,
+    'Tacoma'),
+    ('Tacoma Scavenger Hunt: Bright Lights, Big Glass',
+    'Let’s Roam is the #1 app-led scavenger hunt company. Walk to all the best landmarks and hidden gems, answering trivia questions and solving challenges. Work with your team or compete against them, as you learn new facts and create memorable experiences.',
+    '1701 Pacific Ave, Tacoma, WA 98402, USA',
+    15,
+    25,
+    'Tacoma');
 
+-- Create user table to keep track of authorized users of the system
 CREATE TABLE "user" (
 	user_id serial PRIMARY KEY,
-	name VARCHAR ( 50 ) NOT NULL,
-    email VARCHAR ( 50 ) UNIQUE NOT NULL,
+	name VARCHAR ( 500 ) NOT NULL,
+    email VARCHAR ( 100 ) UNIQUE NOT NULL,
     contact INT  NOT NULL,
-    password VARCHAR ( 50 ) NOT NULL
+    password VARCHAR ( 100 ) NOT NULL
 );
 
+-- Insert base (raw) entries into user table
 INSERT INTO "user" (name,email,password,contact)
 VALUES
     ('Admin',
@@ -93,7 +109,7 @@ VALUES
     '235658449'),
     ('Ayushi',
     'ayushi@gmail.com',
-    'shraddha',
+    'ayushi',
     '235659449'),
     ('Apple',
     'apple@gmail',
@@ -110,10 +126,18 @@ VALUES
      ('Kunal',
     'kunal@gmail.com',
     'kunal',
-    '238558447')
+    '238558447'),
+     ('Sam',
+    'sam@gmail.com',
+    'sam',
+    '238118447'),
+     ('Christopher',
+    'chris@gmail.com',
+    'chris',
+    '238338447')
     ;
 
-
+-- Create payment table to keep track of payment info of a given user
 CREATE TABLE payment (
 	user_id integer UNIQUE PRIMARY KEY,
 	card_number VARCHAR ( 50 ) UNIQUE NOT NULL,
@@ -123,6 +147,7 @@ CREATE TABLE payment (
 	  REFERENCES "user"(user_id)
 );
 
+-- Insert base (raw) entries into payment table
 INSERT INTO payment (user_id,card_number,expiration)
 VALUES
     (1,
@@ -133,9 +158,30 @@ VALUES
     '01/25'),
     (3,
     '987654',
+    '01/25'),
+    (4,
+    '456789',
+    '01/25'),
+    (5,
+    '000222',
+    '01/25'),
+    (6,
+    '654123',
+    '01/25'),
+    (7,
+    '765432',
+    '01/25'),
+    (8,
+    '111222',
+    '01/25'),
+    (9,
+    '444555',
+    '01/25'),
+    (10,
+    '666555',
     '01/25');
 
-
+-- Create day_attraction table to keep track of attractions available on a given day
 CREATE TABLE "day_attraction" (
 	date DATE NOT NULL,
 	attraction_id INT NOT NULL,
@@ -147,6 +193,7 @@ CREATE TABLE "day_attraction" (
     CONSTRAINT positive_number_OF_tickets_booked CHECK (number_of_tickets_booked >= 0)
 );
 
+-- Insert base (raw) entries into day_attraction table
 insert into day_attraction (date,attraction_id,number_of_tickets_booked )
 VALUES (NOW(), 1, 25 ),
        (NOW() + INTERVAL '1 DAY', 1, 30 ),
@@ -179,8 +226,20 @@ VALUES (NOW(), 1, 25 ),
 
        (NOW(), 8, 12 ),
        (NOW() + INTERVAL '1 DAY', 8, 4 ),
-       (NOW() - INTERVAL '1 DAY', 8, 10 );
+       (NOW() - INTERVAL '1 DAY', 8, 10 ),
 
+
+       (NOW(), 9, 12 ),
+       (NOW() + INTERVAL '1 DAY', 9, 4 ),
+       (NOW() - INTERVAL '1 DAY', 9, 10 ),
+
+
+       (NOW(), 10, 12 ),
+       (NOW() + INTERVAL '1 DAY', 10, 4 ),
+       (NOW() - INTERVAL '1 DAY', 10, 10 );
+
+
+-- Create amenity table to keep track of amenities included in a given attraction
 CREATE TABLE amenity (
     amenity_id serial PRIMARY KEY,
 	attraction_id INT NOT NULL,
@@ -190,6 +249,8 @@ CREATE TABLE amenity (
 	  REFERENCES attraction(attraction_id)
 );
 
+
+-- Insert base (raw) entries into amenity table
 insert into amenity (attraction_id,amenity_name )
 VALUES (1, 'Hotel pickup offered'),
        (1, 'Free parking'),
@@ -197,9 +258,23 @@ VALUES (1, 'Hotel pickup offered'),
        (2, 'Hotel pickup offered'),
        (2, 'Taking Covid-19 safety measures'),
        (3, 'Taking Covid-19 safety measures'),
-       (3, 'Souvenir photos');
+       (3, 'Souvenir photos'),
+       (4, 'Taking Covid-19 safety measures'),
+       (4, 'Souvenir photos'),
+       (5, 'Taking Covid-19 safety measures'),
+       (5, 'Souvenir photos'),
+       (6, 'Taking Covid-19 safety measures'),
+       (6, 'Souvenir photos'),
+       (7, 'Taking Covid-19 safety measures'),
+       (7, 'Souvenir photos'),
+       (8, 'Taking Covid-19 safety measures'),
+       (8, 'Souvenir photos'),
+       (9, 'Taking Covid-19 safety measures'),
+       (9, 'Souvenir photos'),
+       (10, 'Taking Covid-19 safety measures'),
+       (10, 'Souvenir photos');
 
-
+-- Create booking table to keep track of bookings done on any given day
 CREATE TABLE booking (
 	booking_id serial PRIMARY KEY,
 	user_id INT NOT NULL,
@@ -217,13 +292,17 @@ CREATE TABLE booking (
 
 );
 
+
+-- Insert base (raw) entries into booking table
 INSERT INTO booking(user_id, attraction_id, date_of_booking, number_of_tickets, status)
 VALUES
-(2, 1, NOW(), 3, 'Payment Done'),
-(3, 2, NOW() + INTERVAL '1 DAY', 1, 'Payment Done'),
-(3, 1, NOW() - INTERVAL '2 DAY', 2, 'Payment Done');
-
-
-
-
-
+(1, 1, NOW() - INTERVAL '2 DAY', 4, 'Payment Done'),
+(2, 1, NOW() - INTERVAL '4 DAY', 3, 'Payment Done'),
+(3, 1, NOW() - INTERVAL '3 DAY', 2, 'Payment Done'),
+(4, 2, NOW() + INTERVAL '1 DAY', 1, 'Payment Done'),
+(4, 1, NOW() - INTERVAL '2 DAY', 2, 'Payment Done'),
+(5, 2, NOW() + INTERVAL '1 DAY', 3, 'Payment Done'),
+(5, 1, NOW() - INTERVAL '2 DAY', 2, 'Payment Done'),
+(6, 2, NOW() + INTERVAL '1 DAY', 3, 'Payment Done'),
+(6, 1, NOW() - INTERVAL '2 DAY', 2, 'Payment Done'),
+(6, 1, NOW() - INTERVAL '2 DAY', 1, 'Payment Done');
