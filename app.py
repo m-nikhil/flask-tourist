@@ -8,7 +8,7 @@ Implemented following functionalities:
 
 '''
 
-
+# Import the required libraries
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_assets import Bundle, Environment
 from dotenv import load_dotenv
@@ -26,23 +26,28 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
+# Load the currently logged in user details
 @login_manager.user_loader
 def load_user(user_id):
     return User.get(user_id)
 
+# Redirect to unauthorized user page for non-authorized user
 @login_manager.unauthorized_handler
 def page_not_authorized():
     return render_template('not_authorized.html'), 401
 
+# Test function to check the server connectivity
 @app.route('/ping')
 def ping():
     return "Hello! I am running"
 
+# Test function to check the server connectivity
 @app.route('/lock-ping')
 @login_required
 def lock_ping():
     return "Hello! I am logged in"
 
+# Functionality to show the attraction page and redirect to view attractions web-page
 @app.route('/attraction')
 def attraction():
     city = request.args.get('city') if request.args.get('city') else ''
@@ -81,6 +86,8 @@ def attraction():
     #pprint(date)
     return render_template('attraction.html', attractions=attractions_dict, date = date, city = city, today=datetime.date.today())
 
+
+# Functionality to show the upcoming and past bookings done by the logged in user
 @app.route('/viewBookings')
 @login_required
 def viewBookings():
@@ -131,13 +138,9 @@ def viewBookings():
     conn.close()
     return render_template('viewBooking.html', bookings=bookings_dict, past_bookings=past_bookings_dict, today_date=datetime.date.today(), user_details=user_details_dict)
 
+# Functionality to cancel the upcoming bookings if required
 @app.route('/cancelBooking/<booking_id>/<attraction_id>/<number_of_tickets>/<date>')
 def cancelBooking(booking_id=None, attraction_id=None, number_of_tickets=None, date=None):
-
-    # pprint(booking_id)
-    # pprint(attraction_id)
-    # pprint(number_of_tickets)
-    # pprint(date)
 
     conn = get_db_connection()
     cur = conn.cursor()
@@ -152,7 +155,7 @@ def cancelBooking(booking_id=None, attraction_id=None, number_of_tickets=None, d
     flash('Booking successfully cancelled')
     return redirect(url_for('viewBookings'))
 
-
+# Main routing page to show the login functionality and login web-page
 @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -171,14 +174,15 @@ def login():
             return redirect(url_for('attraction'))
     return render_template('login.html', error=error)
 
+
+# Functionality to handle the logout page
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
-
-
+# Functionality to show the currently selected booking details
 @app.route('/attraction/<date>/<attraction_id>')
 @login_required
 def bookAttractionPage(date,attraction_id):
@@ -208,6 +212,7 @@ def bookAttractionPage(date,attraction_id):
     return render_template('AttractionBooking.html',date = date, attraction_id = attraction_id,AttDetail=AttDetail,AttDescription=AttDescription , amenities = amenities,ticketsAvailable = ticketsAvailable)
 
 
+# Functionality to book the requested attraction
 @app.route('/bookingConfirm/<date>/<attraction_id>', methods=['POST'])
 @login_required
 def bookingConfirm(date, attraction_id):
