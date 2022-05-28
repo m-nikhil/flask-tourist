@@ -79,7 +79,7 @@ def attraction():
     cur.close()
     conn.close()
     pprint(date)
-    return render_template('attraction.html', attractions=attractions_dict, date = date, city = city)
+    return render_template('attraction.html', attractions=attractions_dict, date = date, city = city, today=datetime.date.today())
 
 @app.route('/viewBookings')
 @login_required
