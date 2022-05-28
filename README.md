@@ -1,15 +1,24 @@
+# requierement
+- postgres database
+- python 3.9 version
+
 # install pipenv global
 - pip3 install -U pipenv
 
-# run
+# dependency install
+- pipenv shell (Incase of py version conflit, python3.9 -m pipenv shell)
 - pipenv install
-- pipenv shell (Incase of py version conflit, python3 -m pipenv shell)
-- python3 app.py
-- exit (to exit shell)
 
 # setup database
+- rename sample.env to .env
+- change the database details in .env
 - pipenv shell
 - python3 init_db.py
 
-# install
+# run
+- pipenv shell
+- python3 app.py
+- open brower and navigate to http://localhost:5000
+
+# install dependencies
 - pipenv install <package> (outside of pipenv shell)
