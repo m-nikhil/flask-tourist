@@ -1,3 +1,14 @@
+'''
+Implemented following functionalities:
+1. Login and logout
+2. search and display all attractions
+3. View upcoming or past bookings
+4. Book attractions
+5. Cancel bookings
+
+'''
+
+
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_assets import Bundle, Environment
 from dotenv import load_dotenv
@@ -43,6 +54,7 @@ def attraction():
 
     conn = get_db_connection()
     cur = conn.cursor()
+    #SQL query to retrieve attractions on given date and city
     cur.execute('SELECT * FROM day_attraction INNER JOIN attraction USING (attraction_id) where date=\'{}\' {};'.format(date, city_clause))
     attractions = cur.fetchall()
 
@@ -75,6 +87,7 @@ def viewBookings():
     pprint(str(current_user.get_id()) + current_user.name)
     conn = get_db_connection()
     cur = conn.cursor()
+    # SQL query to retrieve bookings
     sql = '''select bk.booking_id, bk.attraction_id, att.name attraction_spot, att.description, att.address, att.price_per_ticket, bk.number_of_tickets,
                 bk.date_of_booking, bk.status from booking bk
                 inner join "user" usr
@@ -146,6 +159,7 @@ def login():
     error = None
     if request.method == 'POST':
         cur = get_db_connection().cursor()
+        # SQL query to retrieve login details
         cur.execute('SELECT * FROM "user" WHERE email=\'{}\' and password=\'{}\';'.format(request.form['email'], request.form['password']))
         user = cur.fetchone()
         cur.close()
@@ -172,6 +186,7 @@ def bookAttractionPage(date,attraction_id):
 
     conn = get_db_connection()
     cur = conn.cursor()
+    # SQL query to retrieve attractions
     cur.execute('SELECT * FROM attraction where attraction_id=\'{}\';'.format(attraction_id))
     attractions = cur.fetchall()
     print(attractions)
@@ -182,6 +197,7 @@ def bookAttractionPage(date,attraction_id):
     cur.execute('SELECT * FROM day_attraction where date=\'{}\' {}'.format(date, attraction_idString))
     day_attraction = cur.fetchall()
 
+    # SQL query to retrieve amenity
     cur.execute(
         'SELECT * FROM amenity where attraction_id=\'{}\';'.format(attraction_id))
     amenities = cur.fetchall()
@@ -195,7 +211,7 @@ def bookAttractionPage(date,attraction_id):
 @app.route('/bookingConfirm/<date>/<attraction_id>', methods=['GET', 'POST'])
 @login_required
 def bookingConfirm(date, attraction_id):
-    # current_user.get_id()
+
     conn = get_db_connection()
     cur = conn.cursor()
 
@@ -213,10 +229,7 @@ def bookingConfirm(date, attraction_id):
 
     cur.execute('SELECT * FROM attraction where attraction_id =\'{}\''.format(attraction_id))
     Maxattraction = cur.fetchall()
-    # print(Maxattraction[0][4])
-    # print("number of tickets booked")
-    # print(day_attraction[0][2])
-
+    # SQL query to retrieve payment details
     cur.execute(
         'SELECT * FROM payment where user_id=\'{}\';'.format(current_user.get_id()) )
     paymentdetail = cur.fetchall()
@@ -224,13 +237,14 @@ def bookingConfirm(date, attraction_id):
     cur.execute(
         'SELECT * FROM "user" where user_id={};'.format(int(current_user.get_id())))
     userdetail = cur.fetchall()
-    # print(userdetail)
+    #validating payment detail
     if(str(cardnumber) != str(paymentdetail[0][1]) and str(expirycard) != str(paymentdetail[0][2]) and str(nameoncard) != str(userdetail[0][1])):
         return render_template('ConfirmBooking.html', message="Invalid Card Detail")
 
     if(Maxattraction[0][4] - (day_attraction[0][2] + int(NumberOfTickets) ) < 0 ):
         return render_template('ConfirmBooking.html', message="Seats Not available")
     else:
+        # SQL query to update table after booking
         updatequery = 'UPDATE day_attraction SET number_of_tickets_booked = {} where date=\'{}\' {}'.format(int(day_attraction[0][2]) + int(NumberOfTickets),date,attraction_idString)
         cur.execute(updatequery)
         status = 'Payment Done'

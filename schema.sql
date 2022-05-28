@@ -5,8 +5,7 @@ DROP TABLE if exists "user" cascade;
 DROP TABLE if exists "day_attraction" cascade;
 DROP TABLE if exists attraction cascade;
 DROP TABLE if exists Payment cascade;
-
-
+---Created attraction, user, amenity table , day attraciton , booking  and their insertions
 CREATE TABLE attraction (
 	attraction_id serial PRIMARY KEY,
 	name VARCHAR ( 50 ) UNIQUE NOT NULL,
@@ -65,7 +64,7 @@ VALUES
 
 
 CREATE TABLE payment (
-	user_id integer PRIMARY KEY,
+	user_id integer UNIQUE PRIMARY KEY,
 	card_number VARCHAR ( 50 ) UNIQUE NOT NULL,
     expiration VARCHAR ( 50 )  NOT NULL,
     CONSTRAINT fk_payment_user
