@@ -21,6 +21,7 @@
         <div class="mt-10 border-t border-gray-200 pt-10">
           <h2 class="text-lg font-medium text-gray-900">Payment</h2>
 
+
           <fieldset class="mt-4">
             <legend class="sr-only">Payment type</legend>
             <div class="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
@@ -66,7 +67,12 @@
       </div>
     <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
             <button type="submit" class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500">Confirm Booking</button>
+            {% for message in get_flashed_messages() %}
+            <div class="alert-error py-3 px-4">Error: {{ message }}</div>
+          {% endfor %}
           </div>
+
+
 <!--    {% if error %}-->
 <!--              <p class="text-sm"><strong>Error:</strong> {{ error }}-->
 <!--    {% endif %}-->
@@ -82,10 +88,10 @@
         <h1 class="text-2xl   tracking-tight font-medium text-gray-900 "> {{AttDetail}}</h1>
 
         <h1  tracking-tight font-medium text-gray-900 s>{{AttDescription}}</h1>
-       <h1  tracking-tight font-medium text-gray-900 s>{{AttDescription}}</h1>
+
         <section aria-labelledby="cart-heading">
            <br></br>
-          <h1  tracking-tight font-medium text-gray-900 s>Amenities</h1>
+          <h1  class="text-1xl   tracking-tight font-medium text-gray-900 ">Amenities</h1>
           <ul role="list" class="border-t border-b border-gray-200 divide-y divide-gray-200">
             {% for Amenity in amenities %}
             <li class="flex py-6">

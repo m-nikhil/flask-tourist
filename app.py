@@ -208,7 +208,7 @@ def bookAttractionPage(date,attraction_id):
     return render_template('AttractionBooking.html',date = date, attraction_id = attraction_id,AttDetail=AttDetail,AttDescription=AttDescription , amenities = amenities,ticketsAvailable = ticketsAvailable)
 
 
-@app.route('/bookingConfirm/<date>/<attraction_id>', methods=['GET', 'POST'])
+@app.route('/bookingConfirm/<date>/<attraction_id>', methods=['POST'])
 @login_required
 def bookingConfirm(date, attraction_id):
 
@@ -238,11 +238,13 @@ def bookingConfirm(date, attraction_id):
         'SELECT * FROM "user" where user_id={};'.format(int(current_user.get_id())))
     userdetail = cur.fetchall()
     #validating payment detail
-    if(str(cardnumber) != str(paymentdetail[0][1]) and str(expirycard) != str(paymentdetail[0][2]) and str(nameoncard) != str(userdetail[0][1])):
-        return render_template('ConfirmBooking.html', message="Invalid Card Detail")
+    if(str(cardnumber) != str(paymentdetail[0][1]) or str(expirycard) != str(paymentdetail[0][2]) or str(nameoncard) != str(userdetail[0][1])):
+        flash('Invalid Card Detail')
+        return redirect(url_for('bookAttractionPage', date=date, attraction_id=attraction_id))
 
     if(Maxattraction[0][4] - (day_attraction[0][2] + int(NumberOfTickets) ) < 0 ):
-        return render_template('ConfirmBooking.html', message="Seats Not available")
+        flash('Seats Not available')
+        return redirect(url_for('bookAttractionPage', date=date, attraction_id=attraction_id))
     else:
         # SQL query to update table after booking
         updatequery = 'UPDATE day_attraction SET number_of_tickets_booked = {} where date=\'{}\' {}'.format(int(day_attraction[0][2]) + int(NumberOfTickets),date,attraction_idString)
