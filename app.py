@@ -81,7 +81,7 @@ def viewBookings():
                 on bk.user_id = usr.user_id
                 inner join attraction att
                 on bk.attraction_id = att.attraction_id 
-                where bk.user_id = \'{}\' '''.format(current_user.get_id())
+                where bk.date_of_booking >= current_date and bk.user_id = \'{}\' '''.format(current_user.get_id())
     pprint(sql)
     cur.execute(sql)
     bookings = cur.fetchall()
